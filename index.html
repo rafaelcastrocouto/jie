@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jie</title>
+    <meta name="author" content="rafaelcastrocouto"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="lib/font-awesome/font-awesome.css"/>
+    <link rel="stylesheet" href="jie.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <noscript>
+        <h2>
+          Error: jimpui requires <i>JavaScript</i>
+        </h2>
+        <p>
+          <a href="http://www.enable-javascript.com/" target="_blank">
+            How can I turn on <i>JavaScript?</i>
+          </a>
+        </p>
+      </noscript>
+      <div class="top-bar">
+        <div tabindex="1">
+          <span>File</span>
+          <div class="file-menu">
+            <span>New Image</span>
+            <span>Open Image</span>
+            <span>Open URL</span>
+            <hr>
+            <span>Save</span>
+            <span>Close</span>
+          </div>
+        </div>
+        <div tabindex="2">
+          <span>Edit</span>
+          <div class="edit-menu">
+            <span>Undo</span>
+            <span>Redo</span>
+            <hr>
+            <span>Cut</span>
+            <span>Copy</span>
+            <span>Paste</span>
+            <hr>
+            <span>Clear</span>
+            <span>Transform</span>
+            <hr>
+            <span>Select all</span>
+            <span>Deselect all</span>
+            <span>Invert Selection</span>
+          </div>
+        </div>
+        <div tabindex="3">
+          <span>Image</span>
+          <div class="image-menu">
+            <span>Crop</span>
+            <span>Image size</span>
+            <span>Canvas size</span>
+            <hr>
+            <span>Rotate 180&deg;</span>
+            <span>Rotate 90&deg; CW</span>
+            <span>Rotate 90&deg; CCW</span>
+            <hr>
+            <span>Flip Vertical</span>
+            <span>Flip Horizontal</span>
+          </div>
+        </div>
+        <div tabindex="4">
+          <span>Layer</span>
+          <div class="layer-menu">
+            <span>Open image as layer</span>
+            <span>Open URL as layer</span>
+            <span>Duplicate layer</span>
+            <hr>
+            <span>Merge visible</span>
+            <span>Flatten image</span>
+            <hr>
+            <span>Crop</span>
+            <span>Image size</span>
+            <span>Canvas size</span>
+            <hr>
+            <span>Rotate 180&deg;</span>
+            <span>Rotate 90&deg; CW</span>
+            <span>Rotate 90&deg; CCW</span>
+            <hr>
+            <span>Flip Vertical</span>
+            <span>Flip Horizontal</span>
+          </div>
+        </div>
+        <div tabindex="5">
+          <span>Adjust</span>
+          <div class="adjust-menu">
+            <span>Brightness / Contrast</span>
+            <span>Hue / Saturation</span>
+            <span>Vibrance</span>
+            <span>Denoise</span>
+            <span>Unsharp Mask</span>
+            <hr>
+            <span>Noise</span>
+            <span>Sepia</span>
+            <span>Vignette</span>
+          </div>
+        </div>
+        <div tabindex="6">
+          <span>Filter</span>
+          <div class="filter-menu">
+            <span>Zoom Blur</span>
+            <span>Triangle Blur</span>
+            <span>Tilt Shift</span>
+            <span>Lens Blur</span>
+            <hr>
+            <span>Swirl</span>
+            <span>Bulge / Pinch</span>
+            <span>Perspective</span>
+            <hr>
+            <span>Ink</span>
+            <span>Edge Work</span>
+            <span>Hexagonal Pixelate</span>
+            <span>Dot Screen</span>
+            <span>Color Halftone</span>
+          </div>
+        </div>
+        <div tabindex="7">
+          <span>Help</span>
+          <div class="help-menu">
+            <span>Wiki</span>
+            <span>Source Code</span>
+            <span>Contact</span>
+          </div>
+        </div>
+      </div>
+      <!-- top-bar -->
+      <div class="tool-bar">
+        <i title="Move" class="move fa fa-location-arrow"></i>
+        <hr>
+        <div class="tools"></div>
+      </div>
+      <!-- tool-bar -->
+      <div class="nav-box window">
+        <h1 class="window-bar">
+          <span class="name">nav-box</span>
+        </h1>
+        <div class="window-container">
+          <div class="nav-preview">
+            <div class="transparent-pattern"></div>
+          </div>
+          <div class="nav-info">
+            <div>
+              <span>X:</span>
+              <span class="info-x"></span>
+            </div>
+            <div>
+              <span>Y:</span>
+              <span class="info-y"></span>
+            </div>
+            <hr>
+            <div>
+              <span>W:</span>
+              <span class="info-w"></span>
+            </div>
+            <div>
+              <span>H:</span>
+              <span class="info-h"></span>
+            </div>
+            <hr>
+            <div>
+              <span>R:</span>
+              <span class="info-r"></span>
+            </div>
+            <div>
+              <span>G:</span>
+              <span class="info-g"></span>
+            </div>
+            <div>
+              <span>B:</span>
+              <span class="info-b"></span>
+            </div>
+            <div>
+              <span>A:</span>
+              <span class="info-a"></span>
+            </div>
+          </div>
+          <div class="zoom">
+            <hr>
+            <span>Zoom</span>
+            <input class="zoom-range" type="range" value="100" min="10" max="990" step="10">
+            <input class="zoom-input" type="number" value="100">
+            <span>%</span>
+          </div>
+        </div>
+      </div>
+      <!-- nav-box -->
+      <div class="layer-box window">
+        <h1 class="window-bar">
+          <span class="name">layer-box</span>
+        </h1>
+        <div class="window-container">
+          <div class="layer-bar">
+            <span class="opacity-label">Opacity</span>
+            <input class="layer-opacity-range" type="range" value="100" max="100" min="0" step="1"/>
+            <input class="layer-opacity-input" type="number" value="100">
+          </div>
+          <div class="layer-column"></div>
+          <div class="layer-controls">
+            <span title="Layer Up" class="layer-move-up fa fa-chevron-up"></span>
+            <span title="Layer Down" class="layer-move-down fa fa-chevron-down"></span>
+            <select class="blend-modes" disabled>
+              <option selected>Normal</option>
+              <option>Multiply</option>
+              <option>Screen</option>
+              <option>Overlay</option>
+              <option>Darken</option>
+              <option>Lighten</option>
+              <option>Color-dodge</option>
+              <option>Color-burn</option>
+              <option>Hard-light</option>
+              <option>Soft-light</option>
+              <option>Difference</option>
+              <option>Exclusion</option>
+              <option>Hue</option>
+              <option>Saturation</option>
+              <option>Color</option>
+              <option>Luminosity</option>
+            </select>
+            <span title="Duplicate Layer" class="layer-duplicate fa fa-files-o"></span>
+            <span title="New Layer" class="layer-new fa fa-file-o"></span>
+            <span title="Delete Layer" class="layer-delete fa fa-trash-o"></span>
+          </div>
+        </div>
+      </div>
+      <!-- layer-box -->
+      <div class="tool-box window">
+        <h1 class="window-bar">
+          <span class="name">tool-box</span>
+        </h1>
+        <div class="window-container">
+          <i title="Move" class="move current fa fa-location-arrow"></i>
+          <i title="Select" class="select fa fa-file-image-o"></i>
+          <i title="Scissor" class="scissor fa fa-scissors"></i>
+          <i title="Magic" class="magic fa fa-magic"></i>
+          <i title="Crop" class="crop fa fa-crop"></i>
+          <i title="Redeye" class="redeye fa fa-eye"></i>
+          <hr>
+          <i title="Pencil" class="pencil fa fa-pencil"></i>
+          <i title="Brush" class="brush fa fa-paint-brush"></i>
+          <i title="Eraser" class="eraser fa fa-eraser"></i>
+          <i title="Bucket" class="bucket fa fa-bitbucket"></i>
+          <i title="Heal" class="heal fa fa-medkit"></i>
+          <i title="Stamp" class="stamp fa fa-ticket"></i>
+          <hr>
+          <i title="Adjust" class="adjust fa fa-adjust"></i>
+          <i title="Transform" class="transform fa fa-object-group"></i>
+          <i title="Dodge" class="dodge fa fa-map-pin"></i>
+          <i title="Burn" class="burn fa fa-hand-lizard-o"></i>
+          <i title="Blur" class="blur fa fa-tint"></i>
+          <i title="Sharpen" class="fa sharpen"></i>
+          <i title="Bulge" class="bulge fa fa-expand"></i>
+          <i title="Pinch" class="pinch fa fa-compress"></i>
+          <hr>
+          <i title="Eyedrop" class="eyedrop fa fa-eyedropper"></i>
+          <i title="Text" class="text fa fa-font"></i>
+          <i title="Pan" class="pan fa fa-hand-paper-o"></i>
+          <i title="Zoom" class="zoom fa fa-search"></i>
+          <hr>
+          <div class="color-tool">
+            <span title="Last Color" class="last-color" data-color="ffffff"></span>
+            <span title="Color" class="current-color" data-color="000000"></span>
+          </div>
+        </div>
+      </div>
+      <!-- tool-box -->
+      <div class="history-box window">
+        <h1 class="window-bar">
+          <span class="name">history-box</span>
+        </h1>
+        <div class="window-container">
+          <div class="history-bar">
+            <div>
+              <span title="History Up" class="history-move-up fa fa-chevron-up"></span>
+              <span title="History Down" class="history-move-down fa fa-chevron-down"></span>
+            </div>
+            <div>
+              <span title="Duplicate History" class="history-duplicate fa fa-files-o"></span>
+              <span title="New Image from History" class="history-new fa fa-file-o"></span>
+              <span title="Delete History" class="history-delete fa fa-trash-o"></span>
+            </div>
+          </div>
+          <div class="history-column"></div>
+        </div>
+      </div>
+      <!-- history-box -->
+      <div class="color-picker window">
+        <h1 class="window-bar">
+          <span class="name">Color Picker</span>
+          <span class="close-window fa fa-window-close"></span>
+        </h1>
+        <div class="window-container">
+          <div id="cp1_ColorMap"></div>
+          <div id="cp1_ColorBar"></div>
+          <div class="color-controls">
+            <div class="color-preview">
+              <div id="cp1_Last"></div>
+              <div id="cp1_Preview"></div>
+            </div>
+            <div>
+              <span>H</span>
+              <input type="radio" id="cp1_HueRadio" name="cp1_Mode" value="0"/>
+              <input type="number" id="cp1_Hue" value="0"/>
+              <span>&deg;</span>
+            </div>
+            <div>
+              <span>S</span>
+              <input type="radio" id="cp1_SaturationRadio" name="cp1_Mode" value="1"/>
+              <input type="number" id="cp1_Saturation" value="100"/>
+              <span>%</span>
+            </div>
+            <div>
+              <span>L</span>
+              <input type="radio" id="cp1_BrightnessRadio" name="cp1_Mode" value="2"/>
+              <input type="number" id="cp1_Brightness" value="100"/>
+              <span>%</span>
+            </div>
+            <hr>
+            <div>
+              <span>R</span>
+              <input type="radio" id="cp1_RedRadio" name="cp1_Mode" value="r"/>
+              <input type="number" id="cp1_Red" value="255"/>
+            </div>
+            <div>
+              <span>G</span>
+              <input type="radio" id="cp1_GreenRadio" name="cp1_Mode" value="g"/>
+              <input type="number" id="cp1_Green" value="0"/>
+            </div>
+            <div>
+              <span>B</span>
+              <input type="radio" id="cp1_BlueRadio" name="cp1_Mode" value="b"/>
+              <input type="number" id="cp1_Blue" value="0"/>
+            </div>
+            <hr>
+            <div>
+              <span>#</span>
+              <input type="text" id="cp1_Hex" value="000000"/>
+            </div>
+          </div>
+          <span class="button ok color-ok">Ok</span>
+        </div>
+      </div>
+      <!-- color-picker -->
+      <div class="windows-container"></div>
+      <!-- windows-container -->
+      <div class="overlay opaque"></div>
+      <!-- overlay -->
+      <div class="new-image window pop hidden">
+        <h1 class="window-bar">
+          <span class="name">New Image</span>
+          <span class="close-window fa fa-window-close"></span>
+        </h1>
+        <div class="window-container">
+          <span>Name:</span>
+          <input type="text" class="image-name" value="Untitled"/>
+          <span>Presets:</span>
+          <select class="new-presets">
+            <option selected>320 x 240</option>
+            <option>640 x 480</option>
+            <option>720 x 480 480p</option>
+            <option>800 x 600</option>
+            <option>1024 x 760</option>
+            <option>1024 x 768</option>
+            <option>1080 x 720  720p</option>
+            <option>1920 x 1080 1080p</option>
+          </select>
+          <div>
+            <span class="inline">Width:</span>
+            <hr>
+            <span class="inline">Height:</span>
+          </div>
+          <input class="width" type="number" value="320"/>
+          <input class="height" type="number" value="240"/>
+          <span class="transparent">
+            Transparent:<input type="checkbox" checked/>
+          </span>
+          <span class="button ok create-new-image">Ok</span>
+          <span class="button cancel">Cancel</span>
+        </div>
+      </div>
+      <!-- new-image -->
+      <div class="open-url window pop hidden">
+        <h1 class="window-bar">
+          <span class="name">Open URL</span>
+          <span class="close-window fa fa-window-close"></span>
+        </h1>
+        <div class="window-container">
+          <span>URL:</span>
+          <input type="text" class="image-url" value="https://node-os.com/images/nodejs.png"/>
+          <span class="button ok create-url-image">Ok</span>
+          <span class="button cancel">Cancel</span>
+        </div>
+      </div>
+      <!-- open-url -->
+      <div class="save-image window pop hidden">
+        <h1 class="window-bar">
+          <span class="name">Save Image</span>
+          <span class="close-window fa fa-window-close"></span>
+        </h1>
+        <div class="window-container">
+          <div class="save-preview">
+            <div class="transparent-pattern"></div>
+          </div>
+          <div class="save-options">
+            <span>Format:</span>
+            <select class="save-formats">
+              <option selected>PNG (transparency)</option>
+              <option>JPG (compression)</option>
+              <option>BMP</option>
+            </select>
+            <div class="save-quality hidden">
+              <span>Quality:</span>
+              <input class="quality" type="number" value="85"/>
+            </div>
+          </div>
+          <span class="button ok save-image-download">Ok</span>
+          <span class="button cancel">Cancel</span>
+        </div>
+      </div>
+      <!-- save-image -->
+    </div>
+    <script src="lib/jimp/jimp.min.js"></script>
+    <script src="lib/colorpicker/colorpicker.min.js"></script>
+    <script src="jie.js"></script>
+  </body>
+</html>
