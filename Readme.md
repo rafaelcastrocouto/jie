@@ -1,4 +1,4 @@
-[#jie][1]
+[jie][1]
 
 This is just a start, please [fork][8] this rep and rip it apart!
 
