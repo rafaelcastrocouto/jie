@@ -1,5 +1,7 @@
 [jie][1]
 
+powered by [jimp][2]
+
 This is just a start, please [fork][8] this rep and rip it apart!
 
 [1]: http://rafaelcastrocouto.github.io/jie
