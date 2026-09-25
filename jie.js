@@ -332,6 +332,71 @@ var jie = {
         cb();
     });
   },
+  'pencil-color': function() {
+    var color = document.querySelector('.current-color').dataset.color;
+    return {
+      r: parseInt(color.slice(0, 2), 16),
+      g: parseInt(color.slice(2, 4), 16),
+      b: parseInt(color.slice(4, 6), 16),
+      a: 255
+    };
+  },
+  'pencil-point': function(img, event) {
+    var bounds = img.getBoundingClientRect();
+    return {
+      x: Math.floor((event.clientX - bounds.left) * img.width / bounds.width),
+      y: Math.floor((event.clientY - bounds.top) * img.height / bounds.height)
+    };
+  },
+  'pencil-draw': function(img, start, end) {
+    var bitmap = img.jimpImage.bitmap;
+    var color = jie['pencil-color']();
+    var dx = Math.abs(end.x - start.x);
+    var dy = Math.abs(end.y - start.y);
+    var sx = start.x < end.x ? 1 : -1;
+    var sy = start.y < end.y ? 1 : -1;
+    var error = dx - dy;
+    var x = start.x;
+    var y = start.y;
+    while (true) {
+      if (x >= 0 && x < bitmap.width && y >= 0 && y < bitmap.height) {
+        var index = (y * bitmap.width + x) * 4;
+        bitmap.data[index + 0] = color.r;
+        bitmap.data[index + 1] = color.g;
+        bitmap.data[index + 2] = color.b;
+        bitmap.data[index + 3] = color.a;
+      }
+      if (x === end.x && y === end.y)
+        break;
+      var twiceError = 2 * error;
+      if (twiceError > -dy) {
+        error -= dy;
+        x += sx;
+      }
+      if (twiceError < dx) {
+        error += dx;
+        y += sy;
+      }
+    }
+  },
+  'pencil-start': function(img, event) {
+    if (!img.jimpImage)
+      return;
+    var point = jie['pencil-point'](img, event);
+    jie['mouse-pencil-data'] = {
+      target: img,
+      point: point
+    };
+    jie['pencil-draw'](img, point, point);
+  },
+  'pencil-move': function(img, event) {
+    var data = jie['mouse-pencil-data'];
+    if (data && data.target === img) {
+      var point = jie['pencil-point'](img, event);
+      jie['pencil-draw'](img, data.point, point);
+      data.point = point;
+    }
+  },
   'layer-add': function(win, img, list, before, layerName, opacity) {
     var layer = jie['layer-create-new'](img, layerName);
     list.insertBefore(layer, before);
@@ -593,6 +658,10 @@ var jie = {
     }
   },
   'mouse-down-image': function(event) {
+    if (document.querySelector('.tool-box .pencil.current')) {
+      jie['pencil-start'](this, event);
+      return;
+    }
     if (!event.target.classList.contains('tool-handler')) {
       var img = this;
       var container = jie['query-up'](img, '.window-container');
@@ -627,6 +696,8 @@ var jie = {
       });
     }
     jie['nav-set-info'](data);
+    if (document.querySelector('.tool-box .pencil.current'))
+      jie['pencil-move'](img, event);
     if (jie['mouse-pan-data']) {
       var container = jie['query-up'](img, '.window-container');
       container.scrollLeft = jie['mouse-pan-data'].ex - event.clientX + jie['mouse-pan-data'].x;
@@ -669,6 +740,13 @@ var jie = {
     jie['mouse-drag-data'] = undefined;
     jie['mouse-resize-data'] = undefined;
     jie['mouse-pan-data'] = undefined;
+    if (jie['mouse-pencil-data']) {
+      var img = jie['mouse-pencil-data'].target;
+      var win = jie['query-up'](img, '.window');
+      jie['jimpImage-to-img'].call(img, null, img.jimpImage, jie['image-update-callback']);
+      jie['history-add-action']('Pencil', win);
+      jie['mouse-pencil-data'] = undefined;
+    }
     if (!event.target.classList.contains('layer-name')) {
       var layerNames = document.querySelectorAll('.layer-name');
       for (item of layerNames)
@@ -772,6 +850,9 @@ var jie = {
     trans.style.height = h + 'px';
   },
   'tool-box-start': function() {
+    var tools = document.querySelectorAll('.tool-box i');
+    for (var tool of tools)
+      tool.addEventListener('click', jie['tool-select']);
     document.querySelector('.current-color').addEventListener('click', jie['color-click']);
     document.querySelector('.last-color').addEventListener('click', jie['color-click']);
     document.querySelector('.color-ok').addEventListener('click', jie['color-picker-hide']);
@@ -782,6 +863,12 @@ var jie = {
       startMode: 'h'
     });
     jie['color-picker-hide']();
+  },
+  'tool-select': function() {
+    var current = document.querySelector('.tool-box i.current');
+    if (current)
+      current.classList.remove('current');
+    this.classList.add('current');
   },
   'top-bar-start': function() {
     var item;
