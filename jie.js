@@ -388,6 +388,7 @@ var jie = {
       point: point
     };
     jie['pencil-draw'](img, point, point);
+    jie['jimpImage-to-img'].call(img, null, img.jimpImage);
   },
   'pencil-move': function(img, event) {
     var data = jie['mouse-pencil-data'];
@@ -395,6 +396,7 @@ var jie = {
       var point = jie['pencil-point'](img, event);
       jie['pencil-draw'](img, data.point, point);
       data.point = point;
+      jie['jimpImage-to-img'].call(img, null, img.jimpImage);
     }
   },
   'layer-add': function(win, img, list, before, layerName, opacity) {
