@@ -1061,10 +1061,19 @@ var jie = {
     }
     f *= w;
     zoom = Math.round(zoom + f);
-    jie['zoom-set'](zoom);
+    var pan;
+    if (event.currentTarget.classList.contains('window-container')) {
+      var container = event.currentTarget;
+      var bounds = container.getBoundingClientRect();
+      pan = {
+        x: (container.scrollLeft + event.clientX - bounds.left) / container.scrollWidth,
+        y: (container.scrollTop + event.clientY - bounds.top) / container.scrollHeight
+      };
+    }
+    jie['zoom-set'](zoom, pan);
     event.preventDefault();
   },
-  'zoom-set': function(zoom) {
+  'zoom-set': function(zoom, pan) {
     zoom = Math.max(zoom, 10);
     zoom = Math.min(zoom, 990);
     document.querySelector('.zoom-range').value = zoom;
@@ -1074,10 +1083,12 @@ var jie = {
       var imgs = win.querySelectorAll('img');
       var img = imgs[0];
       var container = document.querySelector('.window.image.selected .window-container');
-      var pan = {
-        x: (container.scrollLeft + container.offsetWidth / 2) / container.scrollWidth,
-        y: (container.scrollTop + container.offsetHeight / 2) / container.scrollHeight
-      };
+      if (!pan) {
+        pan = {
+          x: (container.scrollLeft + container.offsetWidth / 2) / container.scrollWidth,
+          y: (container.scrollTop + container.offsetHeight / 2) / container.scrollHeight
+        };
+      }
       var scale = zoom / 100;
       var size = {
         width: img.width * scale,
