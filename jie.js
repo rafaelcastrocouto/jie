@@ -1069,23 +1069,15 @@ var jie = {
     zoom = Math.min(zoom, 990);
     document.querySelector('.zoom-range').value = zoom;
     document.querySelector('.zoom-input').value = zoom;
-    var x = document.querySelector('.nav-box .info-x').textContent - 1;
-    var y = document.querySelector('.nav-box .info-y').textContent - 1;
     var win = document.querySelector('.window.image.selected');
     if (win) {
       var imgs = win.querySelectorAll('img');
       var img = imgs[0];
-      if (x)
-        jie['zoom-current'].x = x / img.width;
-      if (y)
-        jie['zoom-current'].y = y / img.height;
       var container = document.querySelector('.window.image.selected .window-container');
-      var offset = {
-        x: jie['zoom-current'].x * (container.scrollWidth - container.offsetWidth + 18),
-        y: jie['zoom-current'].y * (container.scrollHeight - container.offsetHeight + 12)
+      var pan = {
+        x: (container.scrollLeft + container.offsetWidth / 2) / container.scrollWidth,
+        y: (container.scrollTop + container.offsetHeight / 2) / container.scrollHeight
       };
-      container.scrollLeft = Math.floor(offset.x);
-      container.scrollTop = Math.floor(offset.y);
       var scale = zoom / 100;
       var size = {
         width: img.width * scale,
@@ -1097,6 +1089,8 @@ var jie = {
         img.style.transform = 'scale(' + scale + ')';
         img.dataset.scale = scale;
       }
+      container.scrollLeft = Math.floor(pan.x * container.scrollWidth - container.offsetWidth / 2);
+      container.scrollTop = Math.floor(pan.y * container.scrollHeight - container.offsetHeight / 2);
     }
   }
 };
