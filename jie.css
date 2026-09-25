@@ -483,6 +483,32 @@ input[type=checkbox], input[type=range], select {
   opacity: 0.8;
   cursor: default;
 }
+.brush-box {
+  width: 205px;
+  top: 548px;
+  left: calc(100vw - 216px);
+}
+.brush-box .window-container {
+  height: 32px;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+.brush-box label {
+  font-size: 11px;
+  vertical-align: middle;
+}
+.brush-box .brush-size-range {
+  width: 100px;
+  margin: 0 4px;
+  vertical-align: middle;
+}
+.brush-box .brush-size-input {
+  width: 42px;
+  padding: 0;
+  border: 0;
+  line-height: 20px;
+  vertical-align: middle;
+}
 
 [class*=box] {
   z-index: 2;

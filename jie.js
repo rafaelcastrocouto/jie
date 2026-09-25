@@ -17,6 +17,7 @@ var jie = {
     var item;
     jie['top-bar-start']();
     jie['tool-box-start']();
+    jie['brush-box-start']();
     jie['nav-box-start']();
     jie['layer-box-start']();
     jie['window-start']();
@@ -365,6 +366,8 @@ var jie = {
   'pencil-draw': function(img, start, end, erase) {
     var bitmap = img.jimpImage.bitmap;
     var color = jie['pencil-color'](erase);
+    var size = jie['brush-size-get']();
+    var offset = Math.floor((size - 1) / 2);
     var dx = Math.abs(end.x - start.x);
     var dy = Math.abs(end.y - start.y);
     var sx = start.x < end.x ? 1 : -1;
@@ -373,12 +376,16 @@ var jie = {
     var x = start.x;
     var y = start.y;
     while (true) {
-      if (x >= 0 && x < bitmap.width && y >= 0 && y < bitmap.height) {
-        var index = (y * bitmap.width + x) * 4;
-        bitmap.data[index + 0] = color.r;
-        bitmap.data[index + 1] = color.g;
-        bitmap.data[index + 2] = color.b;
-        bitmap.data[index + 3] = color.a;
+      for (var brushY = y - offset; brushY < y - offset + size; brushY++) {
+        for (var brushX = x - offset; brushX < x - offset + size; brushX++) {
+          if (brushX >= 0 && brushX < bitmap.width && brushY >= 0 && brushY < bitmap.height) {
+            var index = (brushY * bitmap.width + brushX) * 4;
+            bitmap.data[index + 0] = color.r;
+            bitmap.data[index + 1] = color.g;
+            bitmap.data[index + 2] = color.b;
+            bitmap.data[index + 3] = color.a;
+          }
+        }
       }
       if (x === end.x && y === end.y)
         break;
@@ -392,6 +399,14 @@ var jie = {
         y += sy;
       }
     }
+  },
+  'brush-size-get': function() {
+    return Math.max(1, Math.min(100, Math.round(document.querySelector('.brush-size-input').value)));
+  },
+  'brush-size-change': function() {
+    var size = Math.max(1, Math.min(100, Math.round(this.value)));
+    document.querySelector('.brush-size-range').value = size;
+    document.querySelector('.brush-size-input').value = size;
   },
   'pencil-start': function(img, event) {
     if (!img.jimpImage)
@@ -881,6 +896,10 @@ var jie = {
       startMode: 'h'
     });
     jie['color-picker-hide']();
+  },
+  'brush-box-start': function() {
+    document.querySelector('.brush-size-range').addEventListener('input', jie['brush-size-change']);
+    document.querySelector('.brush-size-input').addEventListener('input', jie['brush-size-change']);
   },
   'tool-select': function() {
     var current = document.querySelector('.tool-box i.current');
