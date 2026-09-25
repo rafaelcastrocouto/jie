@@ -1,4 +1,18 @@
 var jie = {
+  'history-actions': {
+    open: 'Open',
+    deleteLayer: 'Delete Layer',
+    duplicateLayer: 'Duplicate Layer',
+    newLayer: 'New Layer',
+    moveLayerDown: 'Move Layer Down',
+    moveLayerUp: 'Move Layer Up',
+    pencil: 'Pencil',
+    eraser: 'Eraser',
+    flipVertical: 'Flip Vertical',
+    flipHorizontal: 'Flip Horizontal',
+    layerFlipVertical: 'Layer Flip Vertical',
+    layerFlipHorizontal: 'Layer Flip Horizontal'
+  },
   'start': function() {
     var item;
     jie['top-bar-start']();
@@ -147,7 +161,7 @@ var jie = {
     var list = document.createElement('div');
     list.classList = 'history-list current';
     list.dataset.id = win.id;
-    var action = jie['history-create-action']('Open', 'locked');
+    var action = jie['history-create-action'](jie['history-actions'].open, 'locked');
     action.imagedata = [{
       name: 'Layer 1',
       img: img.jimpImage.clone()
@@ -332,13 +346,13 @@ var jie = {
         cb();
     });
   },
-  'pencil-color': function() {
+  'pencil-color': function(erase) {
     var color = document.querySelector('.current-color').dataset.color;
     return {
       r: parseInt(color.slice(0, 2), 16),
       g: parseInt(color.slice(2, 4), 16),
       b: parseInt(color.slice(4, 6), 16),
-      a: 255
+      a: erase ? 0 : 255
     };
   },
   'pencil-point': function(img, event) {
@@ -348,9 +362,9 @@ var jie = {
       y: Math.floor((event.clientY - bounds.top) * img.height / bounds.height)
     };
   },
-  'pencil-draw': function(img, start, end) {
+  'pencil-draw': function(img, start, end, erase) {
     var bitmap = img.jimpImage.bitmap;
-    var color = jie['pencil-color']();
+    var color = jie['pencil-color'](erase);
     var dx = Math.abs(end.x - start.x);
     var dy = Math.abs(end.y - start.y);
     var sx = start.x < end.x ? 1 : -1;
@@ -385,16 +399,17 @@ var jie = {
     var point = jie['pencil-point'](img, event);
     jie['mouse-pencil-data'] = {
       target: img,
-      point: point
+      point: point,
+      erase: document.querySelector('.tool-box .eraser.current') !== null
     };
-    jie['pencil-draw'](img, point, point);
+    jie['pencil-draw'](img, point, point, jie['mouse-pencil-data'].erase);
     jie['jimpImage-to-img'].call(img, null, img.jimpImage);
   },
   'pencil-move': function(img, event) {
     var data = jie['mouse-pencil-data'];
     if (data && data.target === img) {
       var point = jie['pencil-point'](img, event);
-      jie['pencil-draw'](img, data.point, point);
+      jie['pencil-draw'](img, data.point, point, data.erase);
       data.point = point;
       jie['jimpImage-to-img'].call(img, null, img.jimpImage);
     }
@@ -507,7 +522,7 @@ var jie = {
         layer.classList.add('selected');
       img = jie['layer-get-img'](layer);
       img.classList.add('current');
-      jie['history-add-action']('Delete Layer', win);
+      jie['history-add-action'](jie['history-actions'].deleteLayer, win);
     }
   },
   'layer-duplicate': function() {
@@ -520,7 +535,7 @@ var jie = {
       cloneImg.jimpImage = img.jimpImage.clone();
       var list = document.querySelector('.current.layer-list');
       jie['layer-add'](win, cloneImg, list, list.querySelector('.selected'), name ,img.dataset.opacity);
-      jie['history-add-action']('Duplicate Layer', win);
+      jie['history-add-action'](jie['history-actions'].duplicateLayer, win);
     }
   },
   'layer-flip': function(layer, horizontal, vertical) {
@@ -594,7 +609,7 @@ var jie = {
     var win = document.querySelector('.window.image.selected');
     var list = document.querySelector('.current.layer-list');
     jie['layer-add'](win, img, list, list.querySelector('.selected'));
-    jie['history-add-action']('New Layer', win);
+    jie['history-add-action'](jie['history-actions'].newLayer, win);
   },
   'layer-move-down': function() {
     var win = document.querySelector('.window.image.selected');
@@ -606,7 +621,7 @@ var jie = {
       if (nextLayer && prevImg) {
         nextLayer.after(layer);
         prevImg.before(img);
-        jie['history-add-action']('Move Layer Down', win);
+        jie['history-add-action'](jie['history-actions'].moveLayerDown, win);
       }
     }
   },
@@ -621,7 +636,7 @@ var jie = {
         if (prevLayer && nextImg) {
           prevLayer.before(layer);
           nextImg.after(img);
-          jie['history-add-action']('Move Layer Up', win);
+          jie['history-add-action'](jie['history-actions'].moveLayerUp, win);
         }
       }
     }
@@ -660,7 +675,7 @@ var jie = {
     }
   },
   'mouse-down-image': function(event) {
-    if (document.querySelector('.tool-box .pencil.current')) {
+    if (document.querySelector('.tool-box .pencil.current, .tool-box .eraser.current')) {
       jie['pencil-start'](this, event);
       return;
     }
@@ -698,7 +713,7 @@ var jie = {
       });
     }
     jie['nav-set-info'](data);
-    if (document.querySelector('.tool-box .pencil.current'))
+    if (document.querySelector('.tool-box .pencil.current, .tool-box .eraser.current'))
       jie['pencil-move'](img, event);
     if (jie['mouse-pan-data']) {
       var container = jie['query-up'](img, '.window-container');
@@ -746,7 +761,8 @@ var jie = {
       var img = jie['mouse-pencil-data'].target;
       var win = jie['query-up'](img, '.window');
       jie['jimpImage-to-img'].call(img, null, img.jimpImage, jie['image-update-callback']);
-      jie['history-add-action']('Pencil', win);
+      var action = jie['mouse-pencil-data'].erase ? jie['history-actions'].eraser : jie['history-actions'].pencil;
+      jie['history-add-action'](action, win);
       jie['mouse-pencil-data'] = undefined;
     }
     if (!event.target.classList.contains('layer-name')) {
@@ -928,7 +944,7 @@ var jie = {
     var win = document.querySelector('.window.image.selected');
     if (win) {
       jie['image-flip'](win, false, true);
-      jie['history-add-action']('Flip Vertical', win);
+      jie['history-add-action'](jie['history-actions'].flipVertical, win);
     }
   },
   'top-bar-image-menu.Flip Horizontal': function() {
@@ -936,7 +952,7 @@ var jie = {
     var win = document.querySelector('.window.image.selected');
     if (win) {
       jie['image-flip'](win, true, false);
-      jie['history-add-action']('Flip Horizontal', win);
+      jie['history-add-action'](jie['history-actions'].flipHorizontal, win);
     }
   },
   'top-bar-layer-menu.Flip Vertical': function() {
@@ -946,7 +962,7 @@ var jie = {
       var layer = document.querySelector('.current.layer-list .selected.layer');
       jie['layer-flip'](layer, false, true);
       var img = jie['layer-get-img'](layer);
-      jie['history-add-action']('Layer Flip Vertical', win);
+      jie['history-add-action'](jie['history-actions'].layerFlipVertical, win);
     }
   },
   'top-bar-layer-menu.Flip Horizontal': function() {
@@ -956,7 +972,7 @@ var jie = {
       var layer = document.querySelector('.current.layer-list .selected.layer');
       jie['layer-flip'](layer, true, false);
       var img = jie['layer-get-img'](layer);
-      jie['history-add-action']('Layer Flip Horizontal', win);
+      jie['history-add-action'](jie['history-actions'].layerFlipHorizontal, win);
     }
   },
   'url-error': function() {
